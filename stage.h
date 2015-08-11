@@ -3,36 +3,32 @@
 
 #include <tuple>
 
-#include "packet.h"
-#include "state.h"
+#include "field_container.h"
+#include "stage_logic.h"
+#include "packet_and_state.h"
 
-template <class StageLogic>
 class Stage {
  public:
   /// Tick this stage
-  void tick() { std::tie(packet_output_, state_output_)= stage_logic_(std::tie(packet_input_, state_input_)); }
+  void tick() { output_ = stage_logic_(input_); }
 
   /// Move packet output alone into the next stage
-  void move_output(Stage & next) const { next.read(packet_output_); }
+  void move_output(Stage & next) const { next.read_incoming(output_.packet); }
 
   /// Read incoming packet input
-  void read_incoming(const Packet & incoming) { packet_input_ = incoming; }
+  void read_incoming(const FieldContainer & incoming_packet) { input_.packet = incoming_packet; }
 
   /// Get current packet output
-  auto output() const { return packet_output_; }
+  auto output() const { return output_.packet; }
 
  private:
-  /// Latches to hold packet output from this stage
-  Packet packet_output_;
+  /// Latches to hold packet and state
+  /// output from this stage
+  PacketAndState output_;
 
-  /// Latch to hold packet input into this stage
-  Packet packet_input_;
-
-  /// Latch to hold state output from this stage
-  State state_output_;
-
-  /// Latch to hold state input into this stage
-  State state_input_;
+  /// Latch to hold packet and state
+  /// input into this stage
+  PacketAndState input_;
 
   /// Stage logic within this stage
   StageLogic stage_logic_;
