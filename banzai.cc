@@ -14,7 +14,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     const Packet exemplar_packet(std::map<std::string, uint32_t>({{"a", 0}, {"b", 0}, {"c", 0}}), 1);
 
     // Construct shared library loader
-    DynamicLinkingLoader("foobar");
+    DynamicLinkingLoader("/lib/x86_64-linux-gnu/libc.so.6");
 
     // Construct pipeline
     Pipeline pipeline({{Atom([](const Packet & p, State & s __attribute__((unused)))
