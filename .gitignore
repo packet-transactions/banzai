@@ -14,3 +14,11 @@ depcomp
 install-sh
 missing
 stamp-h1
+.libs/
+compile
+config.guess
+config.sub
+*.la
+libtool
+ltmain.sh
+*.lo

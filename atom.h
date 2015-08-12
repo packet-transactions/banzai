@@ -1,6 +1,8 @@
 #ifndef ATOM_H_
 #define ATOM_H_
 
+#include <functional>
+
 #include "packet.h"
 
 /// Convenience typedef for state
