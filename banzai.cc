@@ -12,8 +12,11 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
 
   /// Generate random packets using this exemplar
   const auto random_packet = exemplar_packet.generate_random_packet();
+  std::cerr << "random_packet is " << random_packet << "\n";
 
-  std::cerr << "Hello world" << std::endl;
+  /// Initialized pipeline
   Pipeline pipeline({{Atom([](const Packet & p, State & s __attribute__((unused))) { return p; }, FieldContainer())}});
-  pipeline.tick(random_packet);
+
+  /// Run for 100 ticks
+  for (uint32_t i = 0; i < 100; i++) std::cerr << pipeline.tick(random_packet);
 }
