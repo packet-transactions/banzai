@@ -32,10 +32,16 @@ class Packet {
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
-    assert(not this->bubble_);
-    assert(not t_packet.bubble_);
-    this->packet_ += t_packet.packet_;
-    return *this;
+    if (this->bubble_) {
+      this->packet_ = t_packet.packet_;
+      return *this;
+    } else if (t_packet.bubble_) {
+      return *this;
+    } else {
+      assert(not t_packet.bubble_ and not this->bubble_);
+      this->packet_ += t_packet.packet_;
+      return *this;
+    }
   }
 
   /// Generate random Packet with the same fields
