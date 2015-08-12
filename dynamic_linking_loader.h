@@ -32,6 +32,24 @@ class DynamicLinkingLoader {
     dlerror();
   }
 
+  /// Return a copy of an object represented by symbol_name
+  /// by dyn_cast from void * to ReturnType* and then copy
+  /// constructing an object of type ReturnType
+  template <class ReturnType>
+  ReturnType get_object(const std::string & symbol_name) {
+    dlerror();
+    void * object = dlsym(handle_, symbol_name.c_str());
+    const char * error = dlerror();
+    if (error != nullptr) {
+      throw std::runtime_error(error);
+    } else if (object == nullptr) {
+      throw std::runtime_error("Pointing to null object\n");
+    } else {
+      // XXX: Danger
+      return ReturnType(*reinterpret_cast<ReturnType*>(object));
+    }
+  }
+
   /// Destructor for DynamicLinkingLoader
   ~DynamicLinkingLoader() {
     try {
