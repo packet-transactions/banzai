@@ -21,7 +21,7 @@
 class Stage {
  public:
   /// Constructor for Stage that takes an Atom vector
-  Stage(std::vector<Atom> & t_atoms) : atoms_(t_atoms) {};
+  explicit Stage(const std::vector<Atom> & t_atoms) : atoms_(t_atoms) {};
 
   /// Tick this stage by calling all atoms
   /// and combining their outputs.

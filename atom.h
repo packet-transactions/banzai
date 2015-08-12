@@ -3,6 +3,9 @@
 
 #include "packet.h"
 
+/// Convenience typedef for state
+typedef FieldContainer State;
+
 /// A Function object that represents an atomic unit of execution
 /// i.e. something that the hardware can finish before the next packet shows up
 /// (This includes updates to any underlying hidden state.)
@@ -10,9 +13,6 @@
 /// and state that can be mutated between calls to this unit.
 class Atom {
  public:
-  /// Convenience typedef for state
-  typedef FieldContainer State;
-
   /// Convenience typedef for a function that takes a packet and returns a
   /// new one. Represents a sequential block of code that executes within a stage.
   /// Could also modify state in the process.
