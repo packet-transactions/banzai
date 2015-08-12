@@ -12,7 +12,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
 
   // Initialize pipeline
   Pipeline pipeline({{Atom([](const Packet & p, State & s __attribute__((unused)))
-                           { auto ret = p; ret.write("a", ret.read("d") + 1); return ret; }, FieldContainer())}});
+                           { auto ret = p; ret.write("a", ret.read("a") + 1); return ret; }, FieldContainer())}});
 
   // Run for 100 ticks
   for (uint32_t i = 0; i < 100; i++) {
