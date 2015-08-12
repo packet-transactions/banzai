@@ -1,6 +1,8 @@
 #ifndef TYPEDEFS_H_
 #define TYPEDEFS_H_
 
+#include <ostream>
+
 #include "field_container.h"
 
 /// Wrapper around FieldContainer representing a Packet
@@ -48,6 +50,13 @@ class Packet {
   /// as the current one, but with all fields init. to random values.
   auto generate_random_packet() const {
     return Packet(packet_.generate_random_field_map());
+  }
+
+  /// Print to stream
+  friend std::ostream & operator<< (std::ostream & out, const Packet & t_packet) {
+    if (t_packet.bubble_) out << "Bubble \n";
+    else out << t_packet.packet_ << "\n";
+    return out;
   }
 
  private:
