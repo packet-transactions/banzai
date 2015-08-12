@@ -18,6 +18,10 @@ class Atom {
   /// Could also modify state in the process.
   typedef std::function<Packet(const Packet &, State &)> SequentialFunction;
 
+  /// Constructor to Atom takes a SequentialFunction object and an initial value of state
+  Atom(const SequentialFunction & t_sequential_function, const State & t_state)
+    : sequential_function_(t_sequential_function), state_(t_state) {}
+
   /// Overload function call operator
   Packet operator() (const Packet & input) { return sequential_function_(input, state_); }
 
@@ -26,9 +30,7 @@ class Atom {
   SequentialFunction sequential_function_;
 
   /// Hidden State that is used to implement the atomic action
-  FieldContainer state_;
-
-  /// TODO: Initialize the state to the right value here.
+  State state_;
 };
 
 #endif  // ATOM_H_
