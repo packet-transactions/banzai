@@ -18,5 +18,5 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
   Pipeline pipeline({{Atom([](const Packet & p, State & s __attribute__((unused))) { return p; }, FieldContainer())}});
 
   /// Run for 100 ticks
-  for (uint32_t i = 0; i < 100; i++) std::cerr << pipeline.tick(random_packet);
+  for (uint32_t i = 0; i < 100; i++) std::cerr << pipeline.tick(exemplar_packet.generate_random_packet());
 }
