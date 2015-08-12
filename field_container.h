@@ -1,6 +1,7 @@
 #ifndef FIELD_CONTAINER_H_
 #define FIELD_CONTAINER_H_
 
+#include <ostream>
 #include <cassert>
 
 #include <map>

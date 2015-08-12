@@ -35,6 +35,7 @@ class Packet {
     assert(not this->bubble_);
     assert(not t_packet.bubble_);
     this->packet_ += t_packet.packet_;
+    return *this;
   }
 
  private:
