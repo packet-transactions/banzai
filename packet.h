@@ -2,6 +2,7 @@
 #define TYPEDEFS_H_
 
 #include <ostream>
+#include <random>
 
 #include "field_container.h"
 
@@ -12,9 +13,10 @@ class Packet {
   typedef std::string FieldName;
 
   /// Packet constructor
-  Packet(const FieldContainer & t_field_container)
+  Packet(const FieldContainer & t_field_container, const uint32_t & seed)
     : bubble_(false),
-      packet_(t_field_container) {}
+      packet_(t_field_container),
+      prng_(seed) {}
   Packet() {}
 
   /// Check if we have a bubble, to bypass packet processing
@@ -49,7 +51,12 @@ class Packet {
   /// Generate random Packet with the same fields
   /// as the current one, but with all fields init. to random values.
   auto generate_random_packet() const {
-    return Packet(packet_.generate_random_field_map());
+    // Copy over all fields as such from this
+    Packet ret(*this);
+
+    const auto field_list = ret.packet_.field_list();
+    for (const auto & field_name : field_list) ret.write(field_name, packet_field_dist_(prng_));
+    return ret;
   }
 
   /// Print to stream
@@ -60,8 +67,21 @@ class Packet {
   }
 
  private:
+  /// Is this a bubble? i.e. no packet
   bool bubble_ = true;
+
+  /// Underlying FieldContainer managed by Packet
   FieldContainer packet_ = FieldContainer();
+
+  /// PRNG to generate random packet fields,
+  /// This is mutable to allow us to generate random packets from a
+  /// const exemplar packet used to determine the field list
+  mutable std::default_random_engine prng_ = std::default_random_engine(std::random_device()());
+
+  /// Uniform distribution over ints to generate random packet fields
+  /// This is mutable to allow us to generate random packets from a
+  /// const exemplar packet used to determine the field list
+  mutable std::uniform_int_distribution<uint32_t> packet_field_dist_ = std::uniform_int_distribution<uint32_t>(0, std::numeric_limits<uint32_t>::max());
 };
 
 #endif  // TYPEDEFS_H_
