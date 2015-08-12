@@ -9,15 +9,12 @@
 
 int main(const int argc __attribute__ ((unused)), const char ** argv __attribute__((unused))) {
   try {
-    // Initialize field map to contain the right fields
-    const Packet exemplar_packet(std::map<std::string, uint32_t>({{"a", 0}, {"b", 0}, {"c", 0}}), 1);
-
     // Construct shared library loader
-    DynamicLinkingLoader("/lib/x86_64-linux-gnu/libc.so.6");
+    DynamicLinkingLoader dynamic_linking_loader(".libs/libprogtorun.so.0.0.0");
 
-    // Construct pipeline
-    Pipeline pipeline({{Atom([](const Packet & p, State & s __attribute__((unused)))
-                             { auto ret = p; ret.write("a", ret.read("a") + 1); return ret; }, FieldContainer())}});
+    // Construct pipeline and exemplar packet from shared library.
+    Pipeline  pipeline = dynamic_linking_loader.get_object<Pipeline>("test_pipeline");
+    const Packet exemplar_packet = dynamic_linking_loader.get_object<Packet>("test_packet");
 
     // Run for 100 ticks
     for (uint32_t i = 0; i < 100; i++) {
