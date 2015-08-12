@@ -46,7 +46,7 @@ class DynamicLinkingLoader {
       throw std::runtime_error("Pointing to null object\n");
     } else {
       // XXX: Danger
-      return ReturnType(*reinterpret_cast<ReturnType*>(object));
+      return ReturnType(*static_cast<ReturnType*>(object));
     }
   }
 
