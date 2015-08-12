@@ -6,32 +6,34 @@
 #include <utility>
 #include <vector>
 
-#include "packet_and_state.h"
+#include "packet.h"
+#include "atom.h"
 
+/// The core logic that captures the packet processing functionality
+/// of a stage. The semantics of a physical stage are parallel execution
+/// of all the underlying atoms. All state for a physical stage is encapsulated
+/// within these atoms.
 class StageLogic {
  public:
-  /// Convenience typedef for a function that takes a pair of packet and state
-  /// objects and returns a new pair of both objects. Represents a sequential
-  /// block of code that executes within a stage.
-  typedef std::function<PacketAndState(const PacketAndState &)> AtomicAction;
+  /// Constructor for StageLogic that takes an Atom vector
+  StageLogic(std::vector<Atom> & t_atoms) : atoms_(t_atoms) {};
 
-  /// Constructor for StageLogic that takes a vector of AtomicActions
-  StageLogic(std::vector<AtomicAction> & t_atomic_actions) : atomic_actions_(t_atomic_actions) {};
-
-  /// Overload function call operator, by calling all seq_pkt_functions_ and combining their outputs.
-  PacketAndState operator() (const PacketAndState & input) {
-    PacketAndState ret;
+  /// Overload function call operator, by calling all atoms_
+  /// and combining their outputs.
+  Packet operator() (const Packet & input) {
+    Packet ret;
     /// These functions can be executed in any order
-    std::random_shuffle(atomic_actions_.begin(), atomic_actions_.end());
-    for (const auto & atomic_actions : atomic_actions_) {
-      ret += atomic_actions(input);
+    /// A shuffle emulates this non determinisim.
+    std::random_shuffle(atoms_.begin(), atoms_.end());
+    for (auto & atom : atoms_) {
+      ret += atom(input);
     }
     return ret;
   }
 
  private:
-  /// Vector of AtomicActions, each of which is executed in parallel
-  std::vector<AtomicAction> atomic_actions_;
+  /// Vector of Atom, to be executed in parallel
+  std::vector<Atom> atoms_;
 };
 
 #endif  // STAGE_LOGIC_H_

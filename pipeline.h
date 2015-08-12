@@ -5,34 +5,41 @@
 #include <algorithm>
 #include <vector>
 
+#include "packet_latches.h"
 #include "stage.h"
 
+/// A Pipeline class that repesents a switch pipeline made up of several
+/// stages that pass data from one stage to the next.
 class Pipeline {
  public:
   /// Pipeline constructor
-  Pipeline(const std::vector<Stage> & stages) : stages_(stages) {}
+  Pipeline(const std::vector<Stage> & t_stages)
+    : stages_(t_stages),
+      packet_latches_(std::vector<PacketLatches>(stages_.size() -1)) {}
 
-  /// Tick the pipeline synchronously
-  void tick() {
-    /// Initialize field map to contain the right fields TODO
-    /// Initialize the state to the right value.
-
+  /// Tick the pipeline synchronously with input from the outside
+  Packet tick(const Packet & packet) {
     /// Feed input to the first stage of the pipeline
-    stages_.front().read_incoming(FieldContainer().generate_random_field_map());
+    packet_latches_.front().write_half() = stages_.front().tick(packet);
 
-    /// Execute all stages
-    std::for_each(stages_.begin(), stages_.end(), [] (auto & x) { x.tick(); });
-    /// Move outputs of one stage into inputs of the next
-    for (uint32_t i = 0; i < stages_.size() - 1; i++)
-      stages_.at(i).move_output(stages_.at(i + 1));
+    /// Execute stages 1 through n - 2
+    for (uint32_t i = 1; i < stages_.size() - 1; i++) packet_latches_.at(i).write_half() = stages_.at(i).tick(packet_latches_.at(i - 1).read_half());
 
-    /// Print out output
-    std::cerr << stages_.back().output() << std::endl;
+    /// Execute last stage
+    auto ret = stages_.back().tick(packet_latches_.back().read_half());
+
+    /// Swap read and write halves of packet latches akin to double buffering
+    for (auto & packet_latch : packet_latches_) packet_latch.swap();
+
+    return ret;
   }
 
  private:
   /// All stages that are part of the pipeline
   std::vector<Stage> stages_;
+
+  /// All latches that are part of the pipeline
+  std::vector<PacketLatches> packet_latches_;
 };
 
 #endif  // PIPELINE_H_
