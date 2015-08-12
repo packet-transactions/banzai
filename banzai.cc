@@ -9,19 +9,17 @@
 
 int main(const int argc __attribute__ ((unused)), const char ** argv __attribute__((unused))) {
   try {
-    if (argc < 4) {
-      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library pipeline_name exemplar_packet_name " << std::endl;
+    if (argc < 2) {
+      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library" << std::endl;
       return EXIT_SUCCESS;
     }
     // Get cmdline args
     const auto prog_to_run(argv[1]);
-    const auto pipeline_name(argv[2]);
-    const auto packet_name(argv[3]);
 
-    // Construct shared library loader for prog_to_run and use this to load packet_name and pipeline_name
+    // Construct shared library loader for prog_to_run
     DynamicLinkingLoader dynamic_linking_loader(prog_to_run);
-    Pipeline  pipeline = dynamic_linking_loader.get_object<Pipeline>(pipeline_name);
-    const Packet exemplar_packet = dynamic_linking_loader.get_object<Packet>(packet_name);
+    Pipeline  pipeline = dynamic_linking_loader.get_object<Pipeline>("test_pipeline");
+    const Packet exemplar_packet = dynamic_linking_loader.get_object<Packet>("test_packet");
 
     // Run for 100 ticks
     for (uint32_t i = 0; i < 100; i++) {
