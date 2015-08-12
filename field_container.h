@@ -27,7 +27,7 @@ class FieldContainer {
 
   /// Read field
   uint32_t read(const FieldName & field_name) const {
-    assert(field_map_.find(field_name) != field_map_.end());
+    if (field_map_.find(field_name) == field_map_.end()) throw std::logic_error("Could not find " + field_name + " in FieldContainer \n" + str());
     return field_map_.at(field_name);
   }
 
@@ -44,10 +44,16 @@ class FieldContainer {
     return *this;
   }
 
+  /// String representation of object
+  std::string str() const {
+    std::string ret;
+    for (const auto & key_pair : field_map_) ret += key_pair.first + " : " + std::to_string(key_pair.second) + "\n";
+    return ret;
+  }
+
   /// Print to stream
   friend std::ostream & operator<< (std::ostream & out, const FieldContainer & field_container) {
-    for (const auto & key_pair : field_container.field_map_) out << key_pair.first << " : " << key_pair.second << "\n";
-
+    out << field_container.str();
     return out;
   }
 
