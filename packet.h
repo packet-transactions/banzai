@@ -38,9 +38,15 @@ class Packet {
     return *this;
   }
 
+  /// Generate random Packet with the same fields
+  /// as the current one, but with all fields init. to random values.
+  auto generate_random_packet() const {
+    return Packet(packet_.generate_random_field_map());
+  }
+
  private:
   bool bubble_ = true;
-  FieldContainer packet_ = {};
+  FieldContainer packet_ = FieldContainer();
 };
 
 #endif  // TYPEDEFS_H_

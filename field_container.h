@@ -19,6 +19,9 @@ class FieldContainer {
   /// Typedef for string as field name
   typedef std::string FieldName;
 
+  /// Constructor from map
+  FieldContainer(const std::map<FieldName, uint32_t> & t_field_map = {}) : field_map_(t_field_map) {}
+
   /// Write field
   void write(const FieldName & field_name, const uint32_t & val) { field_map_[field_name] = val; }
 
@@ -30,10 +33,12 @@ class FieldContainer {
 
   /// Generate random FieldContainer with the same fields
   /// as the current one, but with all fields init. to random values.
-  auto generate_random_field_map() {
-    FieldContainer field_container;
+  auto generate_random_field_map() const {
+    // Copy over all fields as such
+    FieldContainer field_container(*this);
+
     for (const auto & field_name : field_map_) {
-      field_container.field_map_[field_name.first] = static_cast<uint32_t>(rand());
+      field_container.field_map_.at(field_name.first) = static_cast<uint32_t>(rand());
     }
     return field_container;
   }
