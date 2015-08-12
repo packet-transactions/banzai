@@ -20,8 +20,11 @@
 /// combinational circuit. (i.e. input and output from Stage::tick())
 class Stage {
  public:
+  /// Constructor for Stage that takes an std::initializer_list
+  Stage(const std::initializer_list<Atom> & t_atom_list) : Stage(std::vector<Atom>(t_atom_list)) {};
+
   /// Constructor for Stage that takes an Atom vector
-  explicit Stage(const std::vector<Atom> & t_atoms) : atoms_(t_atoms) {};
+  Stage(const std::vector<Atom> & t_atoms) : atoms_(t_atoms) {};
 
   /// Tick this stage by calling all atoms
   /// and combining their outputs.

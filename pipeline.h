@@ -12,6 +12,9 @@
 /// stages that pass data from one stage to the next.
 class Pipeline {
  public:
+  /// Pipeline constructor from initializer list
+  Pipeline(const std::initializer_list<Stage> & t_stages_list) : Pipeline(std::vector<Stage>(t_stages_list)) {}
+
   /// Pipeline constructor
   Pipeline(const std::vector<Stage> & t_stages)
     : stages_(t_stages),
