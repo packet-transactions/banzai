@@ -1,9 +1,9 @@
 #ifndef FIELD_CONTAINER_H_
 #define FIELD_CONTAINER_H_
 
-#include <ostream>
 #include <cassert>
 
+#include <ostream>
 #include <map>
 
 /// FieldContainer: a map from the field name as a string
@@ -31,18 +31,6 @@ class FieldContainer {
     return field_map_.at(field_name);
   }
 
-  /// Generate random FieldContainer with the same fields
-  /// as the current one, but with all fields init. to random values.
-  auto generate_random_field_map() const {
-    // Copy over all fields as such
-    FieldContainer field_container(*this);
-
-    for (const auto & field_name : field_map_) {
-      field_container.field_map_.at(field_name.first) = static_cast<uint32_t>(rand());
-    }
-    return field_container;
-  }
-
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common
   FieldContainer & operator+=(const FieldContainer & fc) {
@@ -61,6 +49,13 @@ class FieldContainer {
     for (const auto & key_pair : field_container.field_map_) out << key_pair.first << " : " << key_pair.second << "\n";
 
     return out;
+  }
+
+  /// Get list of all fields
+  std::vector<FieldName> field_list() const {
+    std::vector<FieldName> ret;
+    for (const auto & key_pair : field_map_) ret.emplace_back(key_pair.first);
+    return ret;
   }
 
  private:
