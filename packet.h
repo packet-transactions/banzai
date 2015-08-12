@@ -34,10 +34,10 @@ class Packet {
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
+    assert(not t_packet.is_bubble());
     if (this->bubble_) {
+      this->bubble_ = false;
       this->packet_ = t_packet.packet_;
-      return *this;
-    } else if (t_packet.bubble_) {
       return *this;
     } else {
       assert(not t_packet.bubble_ and not this->bubble_);
