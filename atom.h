@@ -23,7 +23,10 @@ class Atom {
     : sequential_function_(t_sequential_function), state_(t_state) {}
 
   /// Overload function call operator
-  Packet operator() (const Packet & input) { return sequential_function_(input, state_); }
+  Packet operator() (const Packet & input) {
+    assert(not input.is_bubble());
+    return sequential_function_(input, state_);
+  }
 
  private:
   /// Underlying sequential function that implements the atomic action
