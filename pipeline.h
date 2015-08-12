@@ -15,23 +15,31 @@ class Pipeline {
   /// Pipeline constructor
   Pipeline(const std::vector<Stage> & t_stages)
     : stages_(t_stages),
-      packet_latches_(std::vector<PacketLatches>(stages_.size() -1)) {}
+      packet_latches_(std::vector<PacketLatches>(stages_.size() >= 1 ? stages_.size() - 1 : 0)) {}
 
   /// Tick the pipeline synchronously with input from the outside
   Packet tick(const Packet & packet) {
-    /// Feed input to the first stage of the pipeline
-    packet_latches_.front().write_half() = stages_.front().tick(packet);
+    assert(not stages_.empty());
 
-    /// Execute stages 1 through n - 2
-    for (uint32_t i = 1; i < stages_.size() - 1; i++) packet_latches_.at(i).write_half() = stages_.at(i).tick(packet_latches_.at(i - 1).read_half());
+    /// If there's only one pipeline stage, there are no latches, directly return
+    if (stages_.size() == 1) {
+      assert(packet_latches_.empty());
+      return stages_.front().tick(packet);
+    } else {
+      /// Feed input to the first stage of the pipeline
+      packet_latches_.front().write_half() = stages_.front().tick(packet);
 
-    /// Execute last stage
-    auto ret = stages_.back().tick(packet_latches_.back().read_half());
+      /// Execute stages 1 through n - 2
+      for (uint32_t i = 1; i < stages_.size() - 1; i++) packet_latches_.at(i).write_half() = stages_.at(i).tick(packet_latches_.at(i - 1).read_half());
 
-    /// Swap read and write halves of packet latches akin to double buffering
-    for (auto & packet_latch : packet_latches_) packet_latch.swap();
+      /// Execute last stage
+      auto ret = stages_.back().tick(packet_latches_.back().read_half());
 
-    return ret;
+      /// Swap read and write halves of packet latches akin to double buffering
+      for (auto & packet_latch : packet_latches_) packet_latch.swap();
+
+      return ret;
+    }
   }
 
  private:
