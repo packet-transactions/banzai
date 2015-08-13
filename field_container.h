@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include <vector>
 #include <ostream>
 #include <map>
 
