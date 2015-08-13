@@ -10,5 +10,5 @@ extern "C" {
   }
   Packet test_packet(std::map<std::string, uint32_t>({{"a", 0}, {"b", 0}, {"c", 0}}), 1);
 
-  Pipeline test_pipeline({{Atom(plus10, FieldContainer()), Atom(plus10, FieldContainer())}});
+  Pipeline test_pipeline({{Atom(plus10, FieldContainer())}, {Atom(plus10, FieldContainer())}});
 }
