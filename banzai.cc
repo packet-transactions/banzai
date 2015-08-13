@@ -29,6 +29,6 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
       std::cerr << "output_packet is \n" << pipeline.tick(input_packet);
     }
   } catch (const std::exception & e) {
-    std::cerr << "Caught exception in main " << e.what() << std::endl;
+    std::cerr << "Caught exception in main " << std::endl << e.what() << std::endl;
   }
 }

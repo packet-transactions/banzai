@@ -35,9 +35,19 @@ class FieldContainer {
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common
   FieldContainer & operator+=(const FieldContainer & fc) {
-    // Check that none of fc's keys are in this and vice versa.
-    for (const auto & key_pair : fc.field_map_) assert(this->field_map_.find(key_pair.first) == this->field_map_.end());
-    for (const auto & key_pair : this->field_map_) assert(fc.field_map_.find(key_pair.first) == fc.field_map_.end());
+    // Check that none of fc's keys are in this ...
+    for (const auto & key_pair : fc.field_map_) {
+      if(this->field_map_.find(key_pair.first) != this->field_map_.end()) {
+        throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str());
+      }
+    }
+
+    // ... and vice versa.
+    for (const auto & key_pair : this->field_map_) {
+      if(fc.field_map_.find(key_pair.first) != fc.field_map_.end()) {
+        throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str());
+      }
+    }
 
     // Collapse the fc key set
     for (const auto & key_pair : fc.field_map_) write(key_pair.first, key_pair.second);
@@ -47,7 +57,7 @@ class FieldContainer {
 
   /// String representation of object
   std::string str() const {
-    std::string ret;
+    std::string ret = "\n";
     for (const auto & key_pair : field_map_) ret += key_pair.first + " : " + std::to_string(key_pair.second) + "\n";
     return ret;
   }
