@@ -18,7 +18,7 @@ extern "C" {
   void plus10(Packet & p, State & s __attribute__((unused))) {
     p("a") = p("a") + 10;
   }
-  Packet test_packet(std::map<std::string, uint32_t>({{"new_hop", 0}, {"next_hop", 0}, {"sport", 0}, {"dport", 0}}), 1);
+  PacketFieldSet test_fields({"new_hop", "next_hop", "sport", "dport"});
 
   Pipeline test_pipeline({{Atom(atom0, FieldContainer())}, {Atom(plus20, FieldContainer())}});
 }
