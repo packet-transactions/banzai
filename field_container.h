@@ -23,14 +23,8 @@ class FieldContainer {
   /// Constructor from map
   FieldContainer(const std::map<FieldName, uint32_t> & t_field_map = {}) : field_map_(t_field_map) {}
 
-  /// Write field
-  void write(const FieldName & field_name, const uint32_t & val) { field_map_[field_name] = val; }
-
-  /// Read field
-  uint32_t read(const FieldName & field_name) const {
-    if (field_map_.find(field_name) == field_map_.end()) throw std::logic_error("Could not find " + field_name + " in FieldContainer \n" + str());
-    return field_map_.at(field_name);
-  }
+  /// Return reference to underlying member
+  uint32_t & field_ref(const FieldName & field_name) { return field_map_[field_name]; }
 
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common
@@ -50,7 +44,7 @@ class FieldContainer {
     }
 
     // Collapse the fc key set
-    for (const auto & key_pair : fc.field_map_) write(key_pair.first, key_pair.second);
+    for (const auto & key_pair : fc.field_map_) field_map_[key_pair.first] = key_pair.second;
 
     return *this;
   }

@@ -22,17 +22,8 @@ class Packet {
   /// Check if we have a bubble, to bypass packet processing
   bool is_bubble() const { return bubble_; }
 
-  /// Write method
-  void write(const FieldName & field_name, const uint32_t & val) {
-    assert(not bubble_);
-    packet_.write(field_name, val);
-  }
-
-  /// Read method
-  uint32_t read(const FieldName & field_name) const {
-    assert(not bubble_);
-    return packet_.read(field_name);
-  }
+  /// Reference to underlying field
+  uint32_t & field_ref(const FieldName & field_name) { return packet_.field_ref(field_name); }
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
@@ -55,7 +46,7 @@ class Packet {
     Packet ret(*this);
 
     const auto field_list = ret.packet_.field_list();
-    for (const auto & field_name : field_list) ret.write(field_name, packet_field_dist_(prng_));
+    for (const auto & field_name : field_list) ret.field_ref(field_name) = packet_field_dist_(prng_);
     return ret;
   }
 
