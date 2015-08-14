@@ -18,16 +18,16 @@ class Atom {
   /// Convenience typedef for a function that takes a packet and returns a
   /// new one. Represents a sequential block of code that executes within a stage.
   /// Could also modify state in the process.
-  typedef std::function<Packet(const Packet &, State &)> SequentialFunction;
+  typedef std::function<void(Packet &, State &)> SequentialFunction;
 
   /// Constructor to Atom takes a SequentialFunction object and an initial value of state
   Atom(const SequentialFunction & t_sequential_function, const State & t_state)
     : sequential_function_(t_sequential_function), state_(t_state) {}
 
   /// Overload function call operator
-  Packet operator() (const Packet & input) {
+  void operator() (Packet & input) {
     assert(not input.is_bubble());
-    return sequential_function_(input, state_);
+    sequential_function_(input, state_);
   }
 
  private:

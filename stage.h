@@ -37,7 +37,9 @@ class Stage {
       /// A shuffle emulates this non determinisim.
       std::random_shuffle(atoms_.begin(), atoms_.end());
       for (auto & atom : atoms_) {
-        ret += atom(input);
+        Packet tmp = input;
+        atom(tmp);
+        ret += tmp;
       }
       return ret;
     }
