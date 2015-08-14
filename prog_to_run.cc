@@ -12,5 +12,7 @@ void atom0(Packet &packet, State &state __attribute__((unused))) {
 }
 PacketFieldSet test_fields({"arrival_time", "dport", "new_hop", "next_hop",
                             "sport"});
-Pipeline test_pipeline{{Atom(atom0, FieldContainer())}};
+Pipeline test_pipeline{
+    {Atom(atom0, FieldContainer(std::map<FieldContainer::FieldName, uint32_t>{
+                     {"last_time", 0}, {"next_hop", 0}}))}};
 }
