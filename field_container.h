@@ -24,7 +24,7 @@ class FieldContainer {
   FieldContainer(const std::map<FieldName, uint32_t> & t_field_map = {}) : field_map_(t_field_map) {}
 
   /// Return reference to underlying member
-  uint32_t & field_ref(const FieldName & field_name) { return field_map_[field_name]; }
+  uint32_t & operator() (const FieldName & field_name) { return field_map_[field_name]; }
 
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common

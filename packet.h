@@ -23,7 +23,7 @@ class Packet {
   bool is_bubble() const { return bubble_; }
 
   /// Reference to underlying field
-  uint32_t & field_ref(const FieldName & field_name) { return packet_.field_ref(field_name); }
+  uint32_t & operator() (const FieldName & field_name) { return packet_(field_name); }
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
@@ -46,7 +46,7 @@ class Packet {
     Packet ret(*this);
 
     const auto field_list = ret.packet_.field_list();
-    for (const auto & field_name : field_list) ret.field_ref(field_name) = packet_field_dist_(prng_);
+    for (const auto & field_name : field_list) ret(field_name) = packet_field_dist_(prng_);
     return ret;
   }
 
