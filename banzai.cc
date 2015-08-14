@@ -31,7 +31,9 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     // Run for 100 ticks
     for (uint32_t i = 0; i < 100; i++) {
       // Generate random test packets using packet_field_set
-      Packet test_packet;
+      // Construct Packet using an empty FieldContainer to signal that this isn't
+      // a default-constructed packet, which is treated as a bubble.
+      Packet test_packet = Packet(FieldContainer());
       for (const auto & field_name : packet_field_set) test_packet(field_name) = packet_field_dist(prng);
 
       std::cerr << "input_packet is \n" << test_packet << "\n";
