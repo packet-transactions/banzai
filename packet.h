@@ -23,7 +23,7 @@ class Packet {
   bool is_bubble() const { return bubble_; }
 
   /// Reference to underlying field
-  uint32_t & operator() (const FieldName & field_name) { return packet_(field_name); }
+  FieldContainer::FieldType & operator() (const FieldName & field_name) { return packet_(field_name); }
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {

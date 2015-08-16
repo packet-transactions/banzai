@@ -17,14 +17,14 @@
 /// and state with named fields as part of that state.
 class FieldContainer {
  public:
-  /// Typedef for string as field name
   typedef std::string FieldName;
+  typedef uint32_t FieldType;
 
   /// Constructor from map
-  FieldContainer(const std::map<FieldName, uint32_t> & t_field_map = {}) : field_map_(t_field_map) {}
+  FieldContainer(const std::map<FieldName, FieldType> & t_field_map = {}) : field_map_(t_field_map) {}
 
   /// Return reference to underlying member
-  uint32_t & operator() (const FieldName & field_name) { return field_map_[field_name]; }
+  FieldType & operator() (const FieldName & field_name) { return field_map_[field_name]; }
 
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common
@@ -75,7 +75,7 @@ class FieldContainer {
 
  private:
   /// Map from FieldName to field value.
-  std::map<FieldName, uint32_t> field_map_ = {};
+  std::map<FieldName, FieldType> field_map_ = {};
 };
 
 #endif  // FIELD_CONTAINER_H_
