@@ -18,7 +18,7 @@
 class FieldContainer {
  public:
   typedef std::string FieldName;
-  typedef uint32_t FieldType;
+  typedef int FieldType;
 
   /// Constructor from map
   FieldContainer(const std::map<FieldName, FieldType> & t_field_map = {}) : field_map_(t_field_map) {}
