@@ -32,14 +32,18 @@ class FieldContainer {
     // Check that none of fc's keys are in this ...
     for (const auto & key_pair : fc.field_map_) {
       if(this->field_map_.find(key_pair.first) != this->field_map_.end()) {
-        throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str());
+        if (this->field_map_.at(key_pair.first) != fc.field_map_.at(key_pair.first)) {
+          throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str() + " and has different values in both");
+        }
       }
     }
 
     // ... and vice versa.
     for (const auto & key_pair : this->field_map_) {
       if(fc.field_map_.find(key_pair.first) != fc.field_map_.end()) {
-        throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str());
+        if (this->field_map_.at(key_pair.first) != fc.field_map_.at(key_pair.first)) {
+          throw std::logic_error("Can't perform FieldContainer union here: " + key_pair.first + " belongs in both " + this->str() + " and " + fc.str() + " and has different values in both");
+        }
       }
     }
 
