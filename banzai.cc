@@ -59,7 +59,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
 
       // Print out user-specified fields in the output_packet
       auto output_packet = pipeline.tick(input_packet);
-      for (const auto & field_name : output_field_set) std::cerr << output_packet(field_name) << std::endl;
+      if (not output_packet.is_bubble()) for (const auto & field_name : output_field_set) std::cerr << output_packet(field_name) << std::endl;
       std::cerr << std::endl;
     }
   } catch (const std::exception & e) {
