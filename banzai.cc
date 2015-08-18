@@ -18,18 +18,24 @@ std::vector<std::string> split(const std::string & input, const std::string & re
   return {first, last};
 }
 
+/// Get set of strings from a comma separated value string
+std::set<std::string> string_set_from_csv(const std::string & csv) {
+  const std::vector<std::string> field_vector = split(csv, ",");
+  return std::set<std::string>(field_vector.begin(), field_vector.end());
+}
+
 int main(const int argc __attribute__ ((unused)), const char ** argv __attribute__((unused))) {
   try {
-    if (argc < 4) {
-      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library seed comma_separated_test_field_list" << std::endl;
+    if (argc < 5) {
+      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library seed comma_separated_input_field_list comma_seperated_output_field_set" << std::endl;
       return EXIT_SUCCESS;
     }
 
     // Get cmdline args
     const auto prog_to_run(argv[1]);
     const uint32_t seed = static_cast<uint32_t>(std::atoi(argv[2]));
-    const std::vector<std::string> field_vector = split(std::string(argv[3]), ",");
-    const PacketFieldSet packet_field_set(field_vector.begin(), field_vector.end());
+    const PacketFieldSet input_field_set  = string_set_from_csv(std::string(argv[3]));
+    const PacketFieldSet output_field_set = string_set_from_csv(std::string(argv[4]));
 
     /// PRNG to generate random packet fields,
     std::default_random_engine prng = std::default_random_engine(seed);
@@ -45,14 +51,16 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
 
     // Run for 100 ticks
     for (uint32_t i = 0; i < 100; i++) {
-      // Generate random test packets using packet_field_set
+      // Generate random input packets using packet_field_set
       // Construct Packet using an empty FieldContainer to signal that this isn't
       // a default-constructed packet, which is treated as a bubble.
-      Packet test_packet = Packet(FieldContainer());
-      for (const auto & field_name : packet_field_set) test_packet(field_name) = packet_field_dist(prng);
+      auto input_packet = Packet(FieldContainer());
+      for (const auto & field_name : input_field_set) input_packet(field_name) = packet_field_dist(prng);
 
-      std::cerr << "input_packet is \n" << test_packet << "\n";
-      std::cerr << "output_packet is \n" << pipeline.tick(test_packet);
+      // Print out user-specified fields in the output_packet
+      auto output_packet = pipeline.tick(input_packet);
+      for (const auto & field_name : output_field_set) std::cerr << output_packet(field_name) << std::endl;
+      std::cerr << std::endl;
     }
   } catch (const std::exception & e) {
     std::cerr << "Caught exception in main " << std::endl << e.what() << std::endl;
