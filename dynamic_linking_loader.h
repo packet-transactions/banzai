@@ -53,7 +53,6 @@ class DynamicLinkingLoader {
   /// Destructor for DynamicLinkingLoader
   ~DynamicLinkingLoader() {
     try {
-      std::cerr << "Calling dlclose in DynamicLinkingLoader's destructor" << std::endl;
       int ret = dlclose(handle_);
       if (ret != 0) {
         throw std::runtime_error(dlerror());
