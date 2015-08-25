@@ -15,10 +15,10 @@
 /// value should take precedence.
 /// FieldContainers can be used to represent both packets with named fields
 /// and state with named fields as part of that state.
+template <class FieldType>
 class FieldContainer {
  public:
   typedef std::string FieldName;
-  typedef int FieldType;
 
   /// Constructor from map
   FieldContainer(const std::map<FieldName, FieldType> & t_field_map = {}) : field_map_(t_field_map) {}

@@ -6,7 +6,7 @@
 #include "packet.h"
 
 /// Convenience typedef for state
-typedef FieldContainer State;
+typedef FieldContainer<int> State;
 
 /// A Function object that represents an atomic unit of execution
 /// i.e. something that the hardware can finish before the next packet shows up

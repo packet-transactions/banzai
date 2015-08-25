@@ -43,7 +43,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     /// Uniform distribution over ints to generate random packet fields
     /// The default support is [0,  std::numeric_limits<IntType>::max()}
     /// http://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution/uniform_int_distribution
-    std::uniform_int_distribution<FieldContainer::FieldType> packet_field_dist;
+    std::uniform_int_distribution<int> packet_field_dist;
 
     // Construct shared library loader for prog_to_run
     DynamicLinkingLoader dynamic_linking_loader(prog_to_run);
@@ -54,7 +54,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
       // Generate random input packets using packet_field_set
       // Construct Packet using an empty FieldContainer to signal that this isn't
       // a default-constructed packet, which is treated as a bubble.
-      auto input_packet = Packet(FieldContainer());
+      auto input_packet = Packet(FieldContainer<int>());
       for (const auto & field_name : input_field_set) input_packet(field_name) = packet_field_dist(prng);
 
       // Print out user-specified fields in the output_packet

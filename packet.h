@@ -12,9 +12,10 @@
 class Packet {
  public:
   typedef std::string FieldName;
+  typedef int FieldType;
 
   /// Packet constructor
-  Packet(const FieldContainer & t_field_container)
+  Packet(const FieldContainer<FieldType> & t_field_container)
     : bubble_(false),
       packet_(t_field_container) {}
   Packet() {}
@@ -23,7 +24,7 @@ class Packet {
   bool is_bubble() const { return bubble_; }
 
   /// Reference to underlying field
-  FieldContainer::FieldType & operator() (const FieldName & field_name) { return packet_(field_name); }
+  FieldType & operator() (const FieldName & field_name) { return packet_(field_name); }
 
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
@@ -51,7 +52,7 @@ class Packet {
   bool bubble_ = true;
 
   /// Underlying FieldContainer managed by Packet
-  FieldContainer packet_ = FieldContainer();
+  FieldContainer<FieldType> packet_ = FieldContainer<FieldType>();
 };
 
 /// Typedef for an std::set<std::string> representing a set of packet fields
