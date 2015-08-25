@@ -5,8 +5,11 @@
 
 #include "packet.h"
 
-/// Convenience typedef for state
-typedef FieldContainer<int> State;
+/// Convenience typedef for state scalar
+typedef FieldContainer<int> StateScalar;
+
+/// Convenience typedef for state array
+typedef FieldContainer<std::vector<int>> StateArray;
 
 /// A Function object that represents an atomic unit of execution
 /// i.e. something that the hardware can finish before the next packet shows up
@@ -18,16 +21,16 @@ class Atom {
   /// Convenience typedef for a function that takes a packet and returns a
   /// new one. Represents a sequential block of code that executes within a stage.
   /// Could also modify state in the process.
-  typedef std::function<void(Packet &, State &)> SequentialFunction;
+  typedef std::function<void(Packet &, StateScalar &, StateArray &)> SequentialFunction;
 
   /// Constructor to Atom takes a SequentialFunction object and an initial value of state
-  Atom(const SequentialFunction & t_sequential_function, const State & t_state)
-    : sequential_function_(t_sequential_function), state_(t_state) {}
+  Atom(const SequentialFunction & t_sequential_function, const StateScalar & t_state_scalar, const StateArray & t_state_array)
+    : sequential_function_(t_sequential_function), state_scalar_(t_state_scalar), state_array_(t_state_array) {}
 
   /// Overload function call operator
   void operator() (Packet & input) {
     assert(not input.is_bubble());
-    sequential_function_(input, state_);
+    sequential_function_(input, state_scalar_, state_array_);
   }
 
  private:
@@ -35,7 +38,10 @@ class Atom {
   SequentialFunction sequential_function_;
 
   /// Hidden State that is used to implement the atomic action
-  State state_;
+  StateScalar state_scalar_;
+
+  /// Hidden StateArray
+  StateArray  state_array_;
 };
 
 #endif  // ATOM_H_
