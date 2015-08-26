@@ -61,7 +61,9 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
       auto output_packet = pipeline.tick(input_packet);
       if (not output_packet.is_bubble()) for (const auto & field_name : output_field_set) std::cerr << field_name << " " << output_packet(field_name) << std::endl;
     }
+    return EXIT_SUCCESS;
   } catch (const std::exception & e) {
     std::cerr << "Caught exception in main " << std::endl << e.what() << std::endl;
+    return EXIT_FAILURE;
   }
 }
