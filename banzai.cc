@@ -26,9 +26,9 @@ std::set<std::string> string_set_from_csv(const std::string & csv) {
 
 int main(const int argc __attribute__ ((unused)), const char ** argv __attribute__((unused))) {
   try {
-    if (argc < 5) {
-      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library seed comma_separated_input_field_list comma_seperated_output_field_set" << std::endl;
-      return EXIT_SUCCESS;
+    if (argc < 6) {
+      std::cerr << "Usage: " << argv[0] << " prog_to_run_as_library seed comma_separated_input_field_list comma_seperated_output_field_set num_ticks" << std::endl;
+      return EXIT_FAILURE;
     }
 
     // Get cmdline args
@@ -36,6 +36,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     const uint32_t seed = static_cast<uint32_t>(std::atoi(argv[2]));
     const PacketFieldSet input_field_set  = string_set_from_csv(std::string(argv[3]));
     const PacketFieldSet output_field_set = string_set_from_csv(std::string(argv[4]));
+    const uint32_t num_ticks = static_cast<uint32_t>(std::atoi(argv[5]));
 
     /// PRNG to generate random packet fields,
     std::default_random_engine prng = std::default_random_engine(seed);
@@ -49,8 +50,8 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     DynamicLinkingLoader dynamic_linking_loader(prog_to_run);
     Pipeline  pipeline = dynamic_linking_loader.get_object<Pipeline>("test_pipeline");
 
-    // Run for 100 ticks
-    for (uint32_t i = 0; i < 100; i++) {
+    // Run for num_ticks
+    for (uint32_t i = 0; i < num_ticks; i++) {
       // Generate random input packets using packet_field_set
       // Construct Packet using an empty FieldContainer to signal that this isn't
       // a default-constructed packet, which is treated as a bubble.
