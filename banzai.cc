@@ -42,9 +42,7 @@ int main(const int argc __attribute__ ((unused)), const char ** argv __attribute
     std::default_random_engine prng = std::default_random_engine(seed);
 
     /// Uniform distribution over ints to generate random packet fields
-    /// The default support is [0,  std::numeric_limits<IntType>::max()}
-    /// http://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution/uniform_int_distribution
-    std::uniform_int_distribution<int> packet_field_dist;
+    std::uniform_int_distribution<int> packet_field_dist(std::numeric_limits<int>::lowest(), std::numeric_limits<int>::max());
 
     // Construct shared library loader for prog_to_run
     DynamicLinkingLoader dynamic_linking_loader(prog_to_run);
