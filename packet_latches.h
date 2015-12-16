@@ -11,7 +11,7 @@
 class PacketLatches {
  public:
   /// Reference to read half
-  auto & read_half() { return read_ ; }
+  auto & read_half() const { return read_ ; }
 
   /// Reference to write half
   auto & write_half() { return write_; }
