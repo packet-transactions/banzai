@@ -58,8 +58,9 @@ class FieldContainer {
 
   /// String representation of object
   std::string str() const {
-    std::string ret = "\n";
-    for (const auto & key_pair : field_map_) ret += key_pair.first + " : " + std::to_string(key_pair.second) + "\n";
+    std::string ret = "(";
+    for (const auto & key_pair : field_map_) ret += key_pair.first + " : " + std::to_string(key_pair.second) + ", ";
+    ret += ")";
     return ret;
   }
 
