@@ -42,6 +42,9 @@ class Atom {
 
   /// Hidden StateArray
   StateArray  state_array_;
+
+  /// Match-action table that permits data-plane inserts and deletes
+  DynamicMatchActionTable dynamic_mat_;
 };
 
 #endif  // ATOM_H_
