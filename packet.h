@@ -26,6 +26,9 @@ class Packet {
   /// Reference to underlying field
   FieldType & operator() (const FieldName & field_name) { return packet_(field_name); }
 
+  /// Const reference to underlying field
+  const FieldType & operator() (const FieldName & field_name) const { return packet_(field_name); }
+
   /// Overload += operator
   Packet & operator+=(const Packet & t_packet) {
     assert(not t_packet.is_bubble());

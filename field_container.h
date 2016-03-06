@@ -29,6 +29,9 @@ class FieldContainer {
   /// Return const reference to underlying member
   const FieldType & operator() (const FieldName & field_name) const { return field_map_.at(field_name); }
 
+  /// Define < operator
+  bool operator<(const FieldContainer<FieldType> & other) const { return field_map_ < other.field_map_; }
+
   /// Overload += operator to merge a FieldContainer into this
   /// as long as they have no fields in common
   FieldContainer & operator+=(const FieldContainer & fc) {

@@ -3,6 +3,7 @@
 
 #include <functional>
 
+#include "dynamic_match_action_table.h"
 #include "packet.h"
 
 /// Convenience typedef for state scalar
@@ -29,6 +30,8 @@ class Atom {
 
   /// Overload function call operator
   void operator() (Packet & input) {
+    // Dummy call to dynamic_mat_
+    dynamic_mat_.update(input);
     assert(not input.is_bubble());
     sequential_function_(input, state_scalar_, state_array_);
   }
@@ -44,7 +47,7 @@ class Atom {
   StateArray  state_array_;
 
   /// Match-action table that permits data-plane inserts and deletes
-  DynamicMatchActionTable dynamic_mat_;
+  DynamicMatchActionTable dynamic_mat_ = DynamicMatchActionTable({}, std::function<void(const Packet &, int)>(), std::function<int(const Packet &)>());
 };
 
 #endif  // ATOM_H_
