@@ -22,7 +22,7 @@ class DynamicMatchActionTable {
 
   /// Constructor takes in vector of strings
   /// denoting the exact match fields
-  DynamicMatchActionTable(const std::vector<std::string> & t_field_names,
+  DynamicMatchActionTable(const PacketFieldSet & t_field_names,
                           const Updater & t_updater,
                           const Initializer & t_initializer);
 
@@ -44,7 +44,7 @@ class DynamicMatchActionTable {
 
   /// Field names to match against
   /// Simulates exact match on a set of field names
-  std::vector<std::string> field_names_ = {};
+  PacketFieldSet field_names_ = {};
 
   /// Update function when updating match-action table
   Updater updater_ = {};

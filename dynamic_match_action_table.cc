@@ -3,7 +3,7 @@
 #include <cassert>
 #include "field_container.h"
 
-DynamicMatchActionTable::DynamicMatchActionTable(const std::vector<std::string> & t_field_names,
+DynamicMatchActionTable::DynamicMatchActionTable(const PacketFieldSet & t_field_names,
                                                  const Updater & t_updater,
                                                  const Initializer & t_initializer)
     : storage_(),
