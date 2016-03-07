@@ -27,7 +27,7 @@ class FieldContainer {
   FieldType & operator() (const FieldName & field_name) { return field_map_[field_name]; }
 
   /// Return const reference to underlying member
-  const FieldType & operator() (const FieldName & field_name) const { return field_map_.at(field_name); }
+  const FieldType & operator() (const FieldName & field_name) const { assert(field_map_.find(field_name) != field_map_.end()); return field_map_.at(field_name); }
 
   /// Define < operator
   bool operator<(const FieldContainer<FieldType> & other) const { return field_map_ < other.field_map_; }
